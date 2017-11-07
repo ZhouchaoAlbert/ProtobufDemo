@@ -87,12 +87,6 @@
   <ItemGroup>
     <None Include="ReadMe.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="PV.pb.cc" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="PV.pb.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
