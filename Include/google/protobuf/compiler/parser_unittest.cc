@@ -42,14 +42,13 @@
 
 #include <google/protobuf/compiler/parser.h>
 
+#include <google/protobuf/unittest.pb.h>
+#include <google/protobuf/unittest_custom_options.pb.h>
 #include <google/protobuf/io/tokenizer.h>
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 #include <google/protobuf/descriptor.pb.h>
-#include <google/protobuf/wire_format.h>
 #include <google/protobuf/text_format.h>
-#include <google/protobuf/unittest.pb.h>
-#include <google/protobuf/unittest_custom_options.pb.h>
-#include <google/protobuf/stubs/strutil.h>
+#include <google/protobuf/wire_format.h>
 #include <google/protobuf/stubs/substitute.h>
 #include <google/protobuf/stubs/map_util.h>
 
@@ -664,7 +663,7 @@ TEST_F(ParseMessageTest, ReservedRange) {
   ExpectParsesTo(
     "message TestMessage {\n"
     "  required int32 foo = 1;\n"
-    "  reserved 2, 15, 9 to 11, 3;\n"
+    "  reserved 2, 15, 9 to 11, 3, 20 to max;\n"
     "}\n",
 
     "message_type {"
@@ -674,6 +673,29 @@ TEST_F(ParseMessageTest, ReservedRange) {
     "  reserved_range { start:15  end:16        }"
     "  reserved_range { start:9   end:12        }"
     "  reserved_range { start:3   end:4         }"
+    "  reserved_range { start:20  end:536870912 }"
+    "}");
+}
+
+TEST_F(ParseMessageTest, ReservedRangeOnMessageSet) {
+  ExpectParsesTo(
+    "message TestMessage {\n"
+    "  option message_set_wire_format = true;\n"
+    "  reserved 20 to max;\n"
+    "}\n",
+
+    "message_type {"
+    "  name: \"TestMessage\""
+    "  options {"
+    "    uninterpreted_option {"
+    "      name {"
+    "        name_part: \"message_set_wire_format\""
+    "        is_extension: false"
+    "      }"
+    "      identifier_value: \"true\""
+    "    }"
+    "  }"
+    "  reserved_range { start:20  end:2147483647 }"
     "}");
 }
 
@@ -704,6 +726,30 @@ TEST_F(ParseMessageTest, ExtensionRange) {
     "}");
 }
 
+TEST_F(ParseMessageTest, ExtensionRangeWithOptions) {
+  ExpectParsesTo(
+    "message TestMessage {\n"
+    "  extensions 10 to 19 [(i) = 5];\n"
+    "}\n",
+
+    "message_type {"
+    "  name: \"TestMessage\""
+    "  extension_range {"
+    "    start:10"
+    "    end:20"
+    "    options {"
+    "      uninterpreted_option {"
+    "        name {"
+    "          name_part: \"i\""
+    "          is_extension: true"
+    "        }"
+    "        positive_int_value: 5"
+    "      }"
+    "    }"
+    "  }"
+    "}");
+}
+
 TEST_F(ParseMessageTest, CompoundExtensionRange) {
   ExpectParsesTo(
     "message TestMessage {\n"
@@ -717,6 +763,82 @@ TEST_F(ParseMessageTest, CompoundExtensionRange) {
     "  extension_range { start:9   end:12        }"
     "  extension_range { start:100 end:536870912 }"
     "  extension_range { start:3   end:4         }"
+    "}");
+}
+
+TEST_F(ParseMessageTest, CompoundExtensionRangeWithOptions) {
+  ExpectParsesTo(
+    "message TestMessage {\n"
+    "  extensions 2, 15, 9 to 11, 100 to max, 3 [(i) = 5];\n"
+    "}\n",
+
+    "message_type {"
+    "  name: \"TestMessage\""
+    "  extension_range {"
+    "    start:2"
+    "    end:3"
+    "    options {"
+    "      uninterpreted_option {"
+    "        name {"
+    "          name_part: \"i\""
+    "          is_extension: true"
+    "        }"
+    "        positive_int_value: 5"
+    "      }"
+    "    }"
+    "  }"
+    "  extension_range {"
+    "    start:15"
+    "    end:16"
+    "    options {"
+    "      uninterpreted_option {"
+    "        name {"
+    "          name_part: \"i\""
+    "          is_extension: true"
+    "        }"
+    "        positive_int_value: 5"
+    "      }"
+    "    }"
+    "  }"
+    "  extension_range {"
+    "    start:9"
+    "    end:12"
+    "    options {"
+    "      uninterpreted_option {"
+    "        name {"
+    "          name_part: \"i\""
+    "          is_extension: true"
+    "        }"
+    "        positive_int_value: 5"
+    "      }"
+    "    }"
+    "  }"
+    "  extension_range {"
+    "    start:100"
+    "    end:536870912"
+    "    options {"
+    "      uninterpreted_option {"
+    "        name {"
+    "          name_part: \"i\""
+    "          is_extension: true"
+    "        }"
+    "        positive_int_value: 5"
+    "      }"
+    "    }"
+    "  }"
+    "  extension_range {"
+    "    start:3"
+    "    end:4"
+    "    options {"
+    "      uninterpreted_option {"
+    "        name {"
+    "          name_part: \"i\""
+    "          is_extension: true"
+    "        }"
+    "        positive_int_value: 5"
+    "      }"
+    "    }"
+    "  }"
     "}");
 }
 
@@ -1369,12 +1491,12 @@ TEST_F(ParseErrorTest, EnumValueMissingNumber) {
 // -------------------------------------------------------------------
 // Reserved field number errors
 
-TEST_F(ParseErrorTest, ReservedMaxNotAllowed) {
+TEST_F(ParseErrorTest, ReservedStandaloneMaxNotAllowed) {
   ExpectHasErrors(
     "message Foo {\n"
-    "  reserved 10 to max;\n"
+    "  reserved max;\n"
     "}\n",
-    "1:17: Expected integer.\n");
+    "1:11: Expected field name or number range.\n");
 }
 
 TEST_F(ParseErrorTest, ReservedMixNameAndNumber) {
@@ -2218,7 +2340,7 @@ class SourceInfoTest : public ParserTest {
       const char* expected_leading_comments,
       const char* expected_trailing_comments,
       const char* expected_leading_detached_comments) {
-    pair<SpanMap::iterator, SpanMap::iterator> range =
+    std::pair<SpanMap::iterator, SpanMap::iterator> range =
         spans_.equal_range(SpanKey(descriptor_proto, field, index));
 
     if (start_marker == '\0') {
@@ -2229,8 +2351,8 @@ class SourceInfoTest : public ParserTest {
         return true;
       }
     } else {
-      pair<int, int> start_pos = FindOrDie(markers_, start_marker);
-      pair<int, int> end_pos = FindOrDie(markers_, end_marker);
+      std::pair<int, int> start_pos = FindOrDie(markers_, start_marker);
+      std::pair<int, int> end_pos = FindOrDie(markers_, end_marker);
 
       RepeatedField<int> expected_span;
       expected_span.Add(start_pos.first);
@@ -2295,9 +2417,9 @@ class SourceInfoTest : public ParserTest {
     }
   };
 
-  typedef multimap<SpanKey, const SourceCodeInfo::Location*> SpanMap;
+  typedef std::multimap<SpanKey, const SourceCodeInfo::Location*> SpanMap;
   SpanMap spans_;
-  map<char, pair<int, int> > markers_;
+  std::map<char, std::pair<int, int> > markers_;
   string text_without_markers_;
 
   void ExtractMarkers(const char* text) {

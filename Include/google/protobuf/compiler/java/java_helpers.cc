@@ -44,6 +44,9 @@
 #include <google/protobuf/stubs/strutil.h>
 #include <google/protobuf/stubs/substitute.h>
 
+
+#include <google/protobuf/stubs/hash.h>  // for hash<T *>
+
 namespace google {
 namespace protobuf {
 namespace compiler {
@@ -166,6 +169,14 @@ string UniqueFileScopeIdentifier(const Descriptor* descriptor) {
   return "static_" + StringReplace(descriptor->full_name(), ".", "_", true);
 }
 
+string CamelCaseFieldName(const FieldDescriptor* field) {
+  string fieldName = UnderscoresToCamelCase(field);
+  if ('0' <= fieldName[0] && fieldName[0] <= '9') {
+    return '_' + fieldName;
+  }
+  return fieldName;
+}
+
 string StripProto(const string& filename) {
   if (HasSuffixString(filename, ".protodevel")) {
     return StripSuffixString(filename, ".protodevel");
@@ -244,6 +255,7 @@ string ClassName(const FileDescriptor* descriptor) {
   ClassNameResolver name_resolver;
   return name_resolver.GetClassName(descriptor, true);
 }
+
 
 string ExtraMessageInterfaces(const Descriptor* descriptor) {
   string interfaces = "// @@protoc_insertion_point(message_implements:"
@@ -360,6 +372,7 @@ const char* BoxedPrimitiveTypeName(JavaType type) {
   return NULL;
 }
 
+
 const char* FieldTypeName(FieldDescriptor::Type field_type) {
   switch (field_type) {
     case FieldDescriptor::TYPE_INT32   : return "INT32";
@@ -415,9 +428,9 @@ string DefaultValue(const FieldDescriptor* field, bool immutable,
              "L";
     case FieldDescriptor::CPPTYPE_DOUBLE: {
       double value = field->default_value_double();
-      if (value == numeric_limits<double>::infinity()) {
+      if (value == std::numeric_limits<double>::infinity()) {
         return "Double.POSITIVE_INFINITY";
-      } else if (value == -numeric_limits<double>::infinity()) {
+      } else if (value == -std::numeric_limits<double>::infinity()) {
         return "Double.NEGATIVE_INFINITY";
       } else if (value != value) {
         return "Double.NaN";
@@ -427,9 +440,9 @@ string DefaultValue(const FieldDescriptor* field, bool immutable,
     }
     case FieldDescriptor::CPPTYPE_FLOAT: {
       float value = field->default_value_float();
-      if (value == numeric_limits<float>::infinity()) {
+      if (value == std::numeric_limits<float>::infinity()) {
         return "Float.POSITIVE_INFINITY";
-      } else if (value == -numeric_limits<float>::infinity()) {
+      } else if (value == -std::numeric_limits<float>::infinity()) {
         return "Float.NEGATIVE_INFINITY";
       } else if (value != value) {
         return "Float.NaN";
