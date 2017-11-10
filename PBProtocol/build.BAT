@@ -1,4 +1,4 @@
-"protoc.exe" PV.proto --cpp_out="../cpp"
+"protoc.exe" login.proto --cpp_out="./"
 
 
 pause	
