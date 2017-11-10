@@ -11,3 +11,8 @@ message PBLoginField
 	optional bool    startup       	= 7;   //开机自启动
 	optional uint32  updatetime 	= 8;   //登录更新时间
 }
+
+message PBLoginList
+{
+	repeated PBLoginField loginlist  = 1;
+}

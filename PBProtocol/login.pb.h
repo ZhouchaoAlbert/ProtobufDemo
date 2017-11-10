@@ -33,6 +33,9 @@
 class PBLoginField;
 class PBLoginFieldDefaultTypeInternal;
 extern PBLoginFieldDefaultTypeInternal _PBLoginField_default_instance_;
+class PBLoginList;
+class PBLoginListDefaultTypeInternal;
+extern PBLoginListDefaultTypeInternal _PBLoginList_default_instance_;
 
 namespace protobuf_login_2eproto {
 // Internal implementation detail -- do not call these.
@@ -249,6 +252,117 @@ class PBLoginField : public ::google::protobuf::Message /* @@protoc_insertion_po
   bool autologin_;
   bool startup_;
   ::google::protobuf::uint32 updatetime_;
+  friend struct protobuf_login_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
+class PBLoginList : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:PBLoginList) */ {
+ public:
+  PBLoginList();
+  virtual ~PBLoginList();
+
+  PBLoginList(const PBLoginList& from);
+
+  inline PBLoginList& operator=(const PBLoginList& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  PBLoginList(PBLoginList&& from) noexcept
+    : PBLoginList() {
+    *this = ::std::move(from);
+  }
+
+  inline PBLoginList& operator=(PBLoginList&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields();
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const PBLoginList& default_instance();
+
+  static inline const PBLoginList* internal_default_instance() {
+    return reinterpret_cast<const PBLoginList*>(
+               &_PBLoginList_default_instance_);
+  }
+  static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
+    1;
+
+  void Swap(PBLoginList* other);
+  friend void swap(PBLoginList& a, PBLoginList& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline PBLoginList* New() const PROTOBUF_FINAL { return New(NULL); }
+
+  PBLoginList* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void CopyFrom(const PBLoginList& from);
+  void MergeFrom(const PBLoginList& from);
+  void Clear() PROTOBUF_FINAL;
+  bool IsInitialized() const PROTOBUF_FINAL;
+
+  size_t ByteSizeLong() const PROTOBUF_FINAL;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const PROTOBUF_FINAL;
+  void InternalSwap(PBLoginList* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated .PBLoginField loginlist = 1;
+  int loginlist_size() const;
+  void clear_loginlist();
+  static const int kLoginlistFieldNumber = 1;
+  const ::PBLoginField& loginlist(int index) const;
+  ::PBLoginField* mutable_loginlist(int index);
+  ::PBLoginField* add_loginlist();
+  ::google::protobuf::RepeatedPtrField< ::PBLoginField >*
+      mutable_loginlist();
+  const ::google::protobuf::RepeatedPtrField< ::PBLoginField >&
+      loginlist() const;
+
+  // @@protoc_insertion_point(class_scope:PBLoginList)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::HasBits<1> _has_bits_;
+  mutable int _cached_size_;
+  ::google::protobuf::RepeatedPtrField< ::PBLoginField > loginlist_;
   friend struct protobuf_login_2eproto::TableStruct;
 };
 // ===================================================================
@@ -572,10 +686,46 @@ inline void PBLoginField::set_updatetime(::google::protobuf::uint32 value) {
   // @@protoc_insertion_point(field_set:PBLoginField.updatetime)
 }
 
+// -------------------------------------------------------------------
+
+// PBLoginList
+
+// repeated .PBLoginField loginlist = 1;
+inline int PBLoginList::loginlist_size() const {
+  return loginlist_.size();
+}
+inline void PBLoginList::clear_loginlist() {
+  loginlist_.Clear();
+}
+inline const ::PBLoginField& PBLoginList::loginlist(int index) const {
+  // @@protoc_insertion_point(field_get:PBLoginList.loginlist)
+  return loginlist_.Get(index);
+}
+inline ::PBLoginField* PBLoginList::mutable_loginlist(int index) {
+  // @@protoc_insertion_point(field_mutable:PBLoginList.loginlist)
+  return loginlist_.Mutable(index);
+}
+inline ::PBLoginField* PBLoginList::add_loginlist() {
+  // @@protoc_insertion_point(field_add:PBLoginList.loginlist)
+  return loginlist_.Add();
+}
+inline ::google::protobuf::RepeatedPtrField< ::PBLoginField >*
+PBLoginList::mutable_loginlist() {
+  // @@protoc_insertion_point(field_mutable_list:PBLoginList.loginlist)
+  return &loginlist_;
+}
+inline const ::google::protobuf::RepeatedPtrField< ::PBLoginField >&
+PBLoginList::loginlist() const {
+  // @@protoc_insertion_point(field_list:PBLoginList.loginlist)
+  return loginlist_;
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
+// -------------------------------------------------------------------
+
 
 // @@protoc_insertion_point(namespace_scope)
 

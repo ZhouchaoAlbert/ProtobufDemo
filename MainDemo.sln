@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MainDemo", "MainDemo\MainDemo.vcxproj", "{1E65E1E1-6E53-41AE-B454-40C9B3A2E6DE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C9023CDF-E2E6-474D-A1E7-3FD152211CB6} = {C9023CDF-E2E6-474D-A1E7-3FD152211CB6}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PBProtocol", "PBProtocol\PBProtocol.vcxproj", "{C9023CDF-E2E6-474D-A1E7-3FD152211CB6}"
 EndProject
